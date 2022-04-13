@@ -7,9 +7,10 @@ module Config
 
 import Data.Configurator
 import Data.Configurator.Types
+import Data.Text
 
 getConfig :: IO Config
 getConfig = load [Required "$(HOME)/.tasksplash.cfg"]
 
-getIssueQuery :: IO String
-getIssueQuery = getConfig >>= flip require "IssueQuery"
+getIssueQuery :: Text -> IO String
+getIssueQuery x = getConfig >>= (`require` x) :: IO String

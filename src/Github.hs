@@ -6,6 +6,7 @@ module Github
   , getUrl
   ) where
 
+import Config
 import Control.Lens
 import Data.Aeson.Lens (_String, key)
 import qualified Data.ByteString as B
