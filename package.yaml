@@ -1,0 +1,56 @@
+name:                tasksplash
+version:             0.1.0.0
+github:              "jesseDMoore1994/tasksplash"
+license:             BSD3
+author:              "Jesse Moore"
+maintainer:          "jesse@jessemoore.dev"
+copyright:           "lgpl"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            TUI
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/jesseDMoore1994/tasksplash#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- wreq
+- lens
+- lens-aeson
+- bytestring
+- text
+- unix
+- configurator
+- filepath
+
+library:
+  source-dirs: src
+
+executables:
+  tasksplash-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - tasksplash
+
+tests:
+  tasksplash-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - tasksplash
