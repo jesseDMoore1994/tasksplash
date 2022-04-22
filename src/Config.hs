@@ -12,5 +12,5 @@ import Data.Text
 getConfig :: IO Config
 getConfig = load [Required "$(HOME)/.tasksplash.cfg"]
 
-getIssueQuery :: Text -> IO String
-getIssueQuery x = getConfig >>= (`require` x) :: IO String
+getIssueQuery :: Config -> IO String
+getIssueQuery config = (config `require` "IssueQuery") :: IO String

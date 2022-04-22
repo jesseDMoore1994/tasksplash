@@ -3,6 +3,7 @@ module Main where
 import Config
 import Data.Configurator
 import Github
+import UI
 
 main :: IO ()
-main = getConfig >>= display
+main = getConfig >>= run

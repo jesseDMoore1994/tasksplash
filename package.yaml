@@ -29,6 +29,9 @@ dependencies:
 - unix
 - configurator
 - filepath
+- brick
+- vty
+- uri-encode
 
 library:
   source-dirs: src
