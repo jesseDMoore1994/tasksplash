@@ -32,12 +32,13 @@ dependencies:
 - brick
 - vty
 - uri-encode
+- containers
 
 library:
   source-dirs: src
 
 executables:
-  tasksplash-exe:
+  tasksplash:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -57,3 +58,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - tasksplash
+    - hspec
+    - hedgehog
+    - QuickCheck

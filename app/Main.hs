@@ -1,9 +1,6 @@
 module Main where
 
-import Config
-import Data.Configurator
-import Github
-import UI
+import Tasksplash
 
 main :: IO ()
 main = getConfig >>= run

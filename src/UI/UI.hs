@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module UI
+module UI.UI
   ( run
   ) where
 
