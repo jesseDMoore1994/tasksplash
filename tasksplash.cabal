@@ -36,15 +36,20 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , aeson-pretty
+    , base >=4.7 && <5
     , brick
     , bytestring
     , configurator
     , containers
+    , exceptions
     , filepath
     , lens
     , lens-aeson
+    , pretty-simple
     , text
+    , transformers
     , unix
     , uri-encode
     , vty
@@ -59,16 +64,21 @@ executable tasksplash
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , aeson-pretty
+    , base >=4.7 && <5
     , brick
     , bytestring
     , configurator
     , containers
+    , exceptions
     , filepath
     , lens
     , lens-aeson
+    , pretty-simple
     , tasksplash
     , text
+    , transformers
     , unix
     , uri-encode
     , vty
@@ -80,24 +90,30 @@ test-suite tasksplash-test
   main-is: Spec.hs
   other-modules:
       RequestSpec
+      SearchIssuesSpec
       Paths_tasksplash
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
+    , aeson
+    , aeson-pretty
     , base >=4.7 && <5
     , brick
     , bytestring
     , configurator
     , containers
+    , exceptions
     , filepath
     , hedgehog
     , hspec
     , lens
     , lens-aeson
+    , pretty-simple
     , tasksplash
     , text
+    , transformers
     , unix
     , uri-encode
     , vty

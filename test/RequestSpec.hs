@@ -8,6 +8,7 @@ module RequestSpec
 import Control.Exception (evaluate)
 import Control.Monad.IO.Class
 import qualified Data.ByteString as B
+import Data.Maybe
 import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
 import Github.Requests (MonadEnv(..), readTokenFromEnv)
@@ -37,19 +38,17 @@ readToken :: Property
 readToken =
   property $ do
     x <- liftIO $ unFoundInEnv readTokenFromEnv
-    x === "aaa"
+    x === Right "aaa"
 
 readTokenFailure :: Property
 readTokenFailure =
   property $ do
     x <- liftIO $ unNotFoundInEnv readTokenFromEnv
-    x === "aaa"
+    x === Left "Cannot get GITHUB_TOKEN from env!"
 
 tests :: IO Bool
 tests =
   checkSequential $
   Group
     "RequestSpec"
-    [ ("readToken", readToken)
-    --, ("readTokenFailure", readTokenFailure)
-    ]
+    [("readToken", readToken), ("readTokenFailure", readTokenFailure)]

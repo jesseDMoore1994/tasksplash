@@ -2,24 +2,26 @@
 {-# LANGUAGE LambdaCase #-}
 
 module Github.Requests
-  ( Params(getParamsFromConfig, asKvList)
+  ( Params(asKvList)
   , getWithParams
   , MonadEnv(getEnv)
   , MonadRequest
   , readTokenFromEnv
+  , Response
   ) where
 
 import Control.Lens
+import Control.Monad.Trans.Class
 import Data.Aeson.Lens (_String, key)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy.Internal as BL
 import Data.Configurator.Types
+import Data.Functor
 import qualified Data.Text as T
 import qualified Network.Wreq as WREQ
 import qualified System.Posix.Env.ByteString as ENV
 
 class Params a where
-  getParamsFromConfig :: Config -> IO a
   asKvList :: a -> [(T.Text, T.Text)]
 
 class Monad m =>
@@ -38,27 +40,34 @@ class Monad m =>
 instance MonadRequest IO where
   getWith = WREQ.getWith
 
-readTokenFromEnv :: MonadEnv m => m B.ByteString
+type Token = Either String B.ByteString
+
+readTokenFromEnv :: MonadEnv m => m Token
 readTokenFromEnv =
   getEnv "GITHUB_TOKEN" >>=
   (\case
-     Just token -> return token
-     Nothing ->
-       error "Authentication token variable GITHUB_TOKEN not found in env")
+     Just x -> return $ Right x
+     _ -> return $ Left "Cannot get GITHUB_TOKEN from env!")
 
-getOpts :: (MonadEnv m, Params a) => a -> m WREQ.Options
+type Options = Either String WREQ.Options
+
+getOpts :: (MonadEnv m, Params a) => a -> m Options
 getOpts get_params =
-  readTokenFromEnv >>=
-  (\token ->
-     return
-       (WREQ.defaults &
-        WREQ.header "Accept" .~ ["application/vnd.github.v3+json"] &
-        WREQ.auth ?~ WREQ.oauth2Token token &
-        WREQ.params .~ asKvList get_params))
+  let construct get_params token =
+        (WREQ.defaults &
+         WREQ.header "Accept" .~ ["application/vnd.github.v3+json"] &
+         WREQ.auth ?~ WREQ.oauth2Token token &
+         WREQ.params .~ asKvList get_params)
+   in readTokenFromEnv >>=
+      (\case
+         Right token -> return (Right (construct get_params token))
+         Left err -> return (Left err))
+
+type Response = Either String (WREQ.Response BL.ByteString)
 
 getWithParams ::
-     (MonadRequest m, MonadEnv m, Params a)
-  => String
-  -> a
-  -> m (WREQ.Response BL.ByteString)
-getWithParams url params = getOpts params >>= (`getWith` url)
+     (MonadRequest m, MonadEnv m, Params a) => String -> a -> m Response
+getWithParams url params =
+  getOpts params >>= \case
+    Right x -> getWith x url <&> Right
+    Left err -> return (Left err)

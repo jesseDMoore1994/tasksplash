@@ -21,6 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/jess
 
 dependencies:
 - base >= 4.7 && < 5
+- exceptions
 - wreq
 - lens
 - lens-aeson
@@ -33,6 +34,10 @@ dependencies:
 - vty
 - uri-encode
 - containers
+- transformers
+- aeson
+- aeson-pretty
+- pretty-simple
 
 library:
   source-dirs: src
